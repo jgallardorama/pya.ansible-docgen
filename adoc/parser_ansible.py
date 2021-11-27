@@ -117,8 +117,8 @@ def parse_play(yaml_source):
     else:
         playbook.hosts = yaml_source.get("hosts", None)
         playbook.tasks = parse_task_list(yaml_source, "tasks")
-        playbook.pre_tasts = parse_task_list(yaml_source, "pre_tasks")
-        playbook.post_tasts = parse_task_list(yaml_source, "pre_posts")
+        playbook.pre_tasks = parse_task_list(yaml_source, "pre_tasks")
+        playbook.post_tasks = parse_task_list(yaml_source, "pre_posts")
         playbook.roles = parse_role_section(yaml_source, "roles")
 
     return playbook
