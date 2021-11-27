@@ -1,5 +1,6 @@
 import io
 import logging
+import click
 
 import shutil
 import os
@@ -7,6 +8,8 @@ import os
 import coloredlogs
 import yaml
 from typing import List
+
+from yaml import loader
 
 import adoc.fetch
 import adoc.render
@@ -17,21 +20,20 @@ coloredlogs.install(fmt="%(asctime)s %(levelname)s %(message)s")
 
 logging.basicConfig(level=logging.INFO)
 
-def main():
+def create_database(database):
+    logging.info("Fetch remote projects")
+    projectInfos = adoc.fetch.fetch_project_infos(False)
+
+    adoc.fetch.download_repos(projectInfos, True)
+
+    yaml_file = io.open(database, "w")
+    yaml.dump(projectInfos, yaml_file)     
+
+def gen_doc(database):
     
-    if False:
-        logging.info("Fetch remote projects")
-        projectInfos = adoc.fetch.fetch_project_infos(False)
-
-        adoc.fetch.download_repos(projectInfos, True)
-
-        yaml_file = io.open("db/db.yml", "w")
-        yaml.dump(projectInfos, yaml_file)
-
-
     logging.info("Read gitlab projects")
-    yaml_file = io.open("db/db.yml", "r")
-    projectInfos = yaml.load(yaml_file)
+    yaml_file = io.open(database, "r")
+    projectInfos = yaml.load(yaml_file, Loader=loader.Loader)
 
     projectInfos = list(
         filter(
@@ -62,6 +64,17 @@ def main():
         dfile.write()
 
     # distutils.dir_util.copy_tree("./static", "./output/static")
+
+
+@click.command()
+@click.option("-c", "--create-db", "create_db", is_flag=True, default=False)
+@click.option("-d", "--database", "database", default="db/db.yaml")
+def main(create_db, database):
+    
+    if create_db:
+        create_database(database)
+   
+    gen_doc(database)
 
 
 if __name__ == '__main__':
