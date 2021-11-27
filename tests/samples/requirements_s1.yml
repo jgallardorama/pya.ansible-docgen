@@ -1,0 +1,27 @@
+- src: https://gitlab.cia.com/cia-automation/libraries/ansible-roles/lnx-role.ntp.git
+  scm: git
+  version: feature/init-version
+
+- src: https://gitlab.cia.com/cia-automation/libraries/ansible-roles/lnx-role.java-jdk.git
+  scm: git
+  version: v0.1
+
+- src: https://gitlab.cia.com/cia-automation/libraries/ansible-roles/lnx-role.system-update.git
+  scm: git
+  version: feature/init-version
+
+- src: https://gitlab.cia.com/cia-automation/libraries/ansible-roles/lnx-role.kafka.git
+  scm: git
+  version: feature/init-version
+
+- src: https://gitlab.cia.com/cia-automation/libraries/ansible-roles/lnx-role.zookeeper.git
+  scm: git
+  version: release/v0.1
+
+- src: https://gitlab.cia.com/cia-automation/libraries/ansible-roles/az-role.deploy-arm-template.git
+  scm: git
+  version: v0.1
+
+- src: https://gitlab.cia.com/cia-automation/libraries/ansible-roles/at-role.send-mail.git
+  scm: git
+  version: feature/release_0_2

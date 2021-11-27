@@ -1,0 +1,53 @@
+{% extends "base.html.j2" %}
+{% block title %}List Projects{% endblock %}
+{% block head %}
+{{ super() }}
+<style type="text/css">
+  .important {
+    color: #336699;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+<table class="table table-sm">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for art_group_by_namespace in doc_repo.artifacts.values() | sort(attribute='namespace') | groupby('namespace') %}
+    <tr>
+      <th scope="row"
+          colspan="3">{{ art_group_by_namespace.grouper }}</th>
+    </tr>
+    {% for art_group_by_name in art_group_by_namespace.list | sort(attribute='name') | groupby('name') %}
+    <tr>
+      <td scope="row"
+          colspan="1">{{ art_group_by_name.grouper }}</td>
+      <td>
+        {% for item in art_group_by_name.list | selectattr("is_version", "equalto", True) | sort(attribute='name') %}
+        <li><a href="{{ item.get_file_path('index') }}.html">
+            {{ item.version }}
+          </a></li>
+        {% endfor %}
+
+      </td>
+      <td>
+        {% for item in art_group_by_name.list | selectattr("is_version", "equalto", False) | sort(attribute='name') %}
+        <li><a href="{{ item.get_file_path('index') }}.html">
+            {{ item.version }}
+          </a></li>
+        {% endfor %}
+
+      </td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+/* Show it is fixed to the top */
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
+
+.important {
+  color: #336699;
+}
+
+,
+.table-plain tbody tr,
+.table-plain tbody tr:hover,
+.table-plain tbody td {
+  background-color: transparent;
+  border: none;
+}
+
+.table td,
+.table th {
+  padding-left: .75rem;
+  padding-right: .1rem;
+  padding-top: .1rem;
+  padding-bottom: .1rem;
+}
+
+.task-head {
+  background-color: #0288d1;
+  color: white;
+}
+
+.playbook-head {
+  background-color: #0277bd;
+  color: white;
+}
+
+.playbook-section-head {
+  background-color: #01579b;
+  color: white;
+}
+
+footer {
+  height: 5rem;
+}

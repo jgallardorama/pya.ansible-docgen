@@ -1,0 +1,34 @@
+
+digraph {
+    rankdir = BT;
+    # splines=ortho;
+    node [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        shape = "record"
+    ]
+    edge [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+    ]
+
+
+    DocProjectInfo
+    DocObject
+    DocRelationType
+    RoleReference
+
+    DocRepoRef -> DocObject [ arrowhead = "empty" ] 
+    DocProject -> DocObject [ arrowhead = "empty" ]
+    DocArtifact -> DocObject [ arrowhead = "empty" ]
+    DocRoleArtifact -> DocArtifact [ arrowhead = "empty" ]
+    DocAnsibleCodeFile -> DocArtifact [ arrowhead = "empty" ]
+
+    DocRelation -> DocObject [ arrowhead = "open" ]
+    DocObject -> DocRelation [ arrowhead = "open" ]
+    DocRelation -> DocRelationType [ style=dashed ]
+    DocRepo [ label="DocRepo\n\<Singleton\>"]
+    DocRepo -> DocObject  [ dir="both" arrowhead = "open", arrowtail = "diamond" ]
+    DocRepo -> DocRelation  [ dir="both" arrowhead = "open", arrowtail = "diamond" ]
+
+}

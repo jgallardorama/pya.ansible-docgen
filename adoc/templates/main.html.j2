@@ -1,0 +1,21 @@
+{% extends "base.html.j2" %}
+{% block title %}Main{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+    <ul>
+    {% for group in doc_repo.projects.values()|groupby('namespace') %}
+        <li>{{ group.grouper }}
+            <ul>
+            {% for item in group.list %}
+                <li><a href="{{ item.get_file_path('index') }}.html">{{ item.name }}</a></li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+
+{% endblock %}

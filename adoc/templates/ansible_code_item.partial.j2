@@ -1,0 +1,150 @@
+
+
+{% if ansible_code_object.is_play %}
+<tr class="playbook-head">
+  <td>
+    Play
+  </td>
+  <td>
+    {{ ansible_code_object.name }}
+  </td>
+</tr>
+<tr>
+  <td colspan="100%">
+    <table class="table table-bordered table-hover">
+      <tbody>
+        {% if ansible_code_object.import_playbook %}
+        <tr class="playbook-section-head">
+          <td>
+            Import
+          </td>
+          <td>
+            {{ ansible_code_object.import_playbook }}
+          </td>
+        </tr>
+
+        {% endif %}
+        {% if ansible_code_object.pre_tasks|length > 0 %}
+        <tr>
+          <td>
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr class="playbook-section-head">
+                  <th colspan="100%">Pre Tasks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in ansible_code_object.pre_tasks %}
+                {% set ansible_code_object = task %}
+                {% include "ansible_code_item.partial.j2" %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        {% endif %}
+        {% if ansible_code_object.roles|length > 0 %}
+        <tr>
+          <td>
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr class="playbook-section-head">
+                  <th colspan="100%">Roles</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in ansible_code_object.roles %}
+                {% set ansible_code_object = task %}
+                {% include "ansible_code_item.partial.j2" %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        {% endif %}
+        {% if ansible_code_object.tasks|length > 0 %}
+        <tr>
+          <td>
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr class="playbook-section-head">
+                  <th colspan="100%">Tasks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in ansible_code_object.tasks %}
+                {% set ansible_code_object = task %}
+                {% include "ansible_code_item.partial.j2" %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        {% endif %}
+        {% if ansible_code_object.post_tasks|length > 0 %}
+        <tr>
+          <td>
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr class="playbook-section-head">
+                  <th colspan="100%">Post Tasks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in ansible_code_object.post_tasks %}
+                {% set ansible_code_object = task %}
+                {% include "ansible_code_item.partial.j2" %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        {% endif %}
+
+
+      </tbody>
+    </table>
+  </td>
+</tr>
+{% elif ansible_code_object.is_block %}
+<tr class="block-head">
+  <td>
+    Block
+  </td>
+  <td> {{ ansible_code_object.name }} </td>
+<tr>
+<tr>
+  <td colspan="100%">
+    <table class="table table-bordered table-hover">
+      <tbody>
+        {% for task in ansible_code_object.tasks %}
+        {% set ansible_code_object = task %}
+        {% include "ansible_code_item.partial.j2" %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </td>
+</tr>
+{% elif ansible_code_object.is_task %}
+{% if v_global.append('1') %}{% endif %}
+{% set task_id = 'task-detail-' + (v_global | length | string) %}
+<tr class="task-head" data-toggle="collapse" data-target="#{{ task_id }}">
+  <td>Task</td>
+  <td>
+    {{ ansible_code_object.name }}
+  </td>
+  <td>
+    {{ ansible_code_object.module }}
+  </td>
+</tr>
+<tr>
+  <td colspan="100%"
+      id="{{ task_id }}"
+      class="collapse">
+    <pre><code class="yaml">{{ ansible_code_object.yaml_txt }}</code></pre>
+  </td>
+</tr>
+
+{% elif ansible_code_object.is_role_ref %}
+Role Reference
+{% endif %}

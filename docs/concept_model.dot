@@ -1,0 +1,17 @@
+
+digraph {
+    rankdir = BT;
+    # splines=ortho;
+    node [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        shape = "record"
+    ]
+    edge [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+    ]
+
+    DocArtifact
+
+}

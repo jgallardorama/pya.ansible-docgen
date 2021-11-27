@@ -1,0 +1,32 @@
+{% extends "base.html.j2" %}
+{% block title %}List Projects{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+
+    <table class="table table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in doc_repo.projects.values()|groupby('namespace') %}
+                <tr>
+                    <th scope="row" colspan="2">{{ group.grouper }}</th>
+                </tr>
+                {% for project in group.list | sort(attribute='name') %}
+                    <tr>
+                        <th scope="row"><a href="{{ project.get_file_path('index') }}.html">{{ project.name }}</a></th>
+                        <td>{{ project.project_info.description}}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

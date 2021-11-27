@@ -1,0 +1,204 @@
+{% extends "base.html.j2" %}
+{% block title %}Role {{ artifact.name }}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+{% set v_global = [] %}
+
+<div class="row doc-section">
+
+  <h1>
+    {{ artifact.name }} <b> [ </b> {{ artifact.version }} <b> ] </b>
+    <a href="{{ artifact.get_project_url() }}"
+       target="_blank">[*]</a>
+    <small class="text-muted">{{ artifact.namespace }}</small>
+
+  </h1>
+</div>
+
+<div class="row doc-section">
+  <div class="col-md-12">
+    <h2>Detail</h2>
+    <p>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Name</th>
+            <td>{{ artifact.name }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Namespace</th>
+            <td>{{ artifact.namespace }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Version</th>
+            <td>{{ artifact.version }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </p>
+  </div>
+</div>
+
+<div class="row doc-section">
+  <div class="col-md-12">
+    <h2>References</h2>
+    <div>
+      <h3>Branches</h3>
+      <p>
+        <ul>
+          {% for item in doc_repo.find_artifacts(artifact.namespace, artifact.name) |
+                selectattr("is_version", "equalto", False) %}
+          <li><a href="{{ item.get_file_path('index') }}.html">
+              {{ item.version }}
+            </a></li>
+          {% endfor %}
+        </ul>
+      </p>
+    </div>
+    <div>
+      <h3>Tags</h3>
+      <p>
+        <ul>
+          {% for item in doc_repo.find_artifacts(artifact.namespace, artifact.name) | 
+                selectattr("is_version", "equalto", True) %}
+          <li><a href="{{ item.get_file_path('index') }}.html">
+              {{ item.version }}
+            </a></li>
+          {% endfor %}
+        </ul>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="row doc-section">
+  <div class="col-md-12">
+    <h2>Dependency Graphs</h2>
+    <div>
+      <h3>Included</h3>
+      <p>
+        <object type="image/svg+xml"
+                data="{{ artifact.get_file_path('included.svg') }}"></object>
+      </p>
+    </div>
+    <div>
+      <h3>Included by</h3>
+      <p>
+        <object type="image/svg+xml"
+                data="{{ artifact.get_file_path('included_by.svg') }}"></object>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="row doc-section">
+  <div class="col-md-12">
+    <h2>Defaults</h2>
+    <p>
+      <div class="doc-section">
+        <div class="tab-content"
+             id="myTabContent">
+          <tr>
+            <td>
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th>Scope</th>
+                    <th>Name</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for prop in artifact.get_properties("defaults") %}
+                  <tr>
+                    <td>{{ prop.scope }}</td>
+                    <td>{{ prop.name }}</td>
+                    <td>
+                      <pre><code class="yaml">{{ prop.value_yml }}</code></pre>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </div>
+      </div>
+    </p>
+  </div>
+</div>
+<div class="row doc-section">
+  <div class="col-md-12">
+    <h2>Vars</h2>
+    <p>
+      <tr>
+        <td>
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Scope</th>
+                <th>Name</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prop in artifact.get_properties("vars") %}
+              <tr>
+                <td>{{ prop.scope }}</td>
+                <td>{{ prop.name }}</td>
+                <td>
+                  <pre><code class="yaml">{{ prop.value_yml }}</code></pre>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </p>
+  </div>
+</div>
+<div class="row doc-section">
+  <div class="col-md-12">
+    <h2>Tasks</h2>
+    <p>
+      <ul class="nav nav-tabs"
+          id="myTab"
+          role="tablist">
+        {% for ansible_code_artifact in (artifact.get_relation_source("ANSIBLE_CODE") | map(attribute='target')) %}
+        <li class="nav-item">
+          <a class="nav-link  {{ 'active' if loop.index == 1 else '' }}"
+             id="file-{{ loop.index }}-tab"
+             data-toggle="tab"
+             href="#file-{{ loop.index }}"
+             role="tab"
+             aria-controls="home"
+             aria-selected="true">{{ ansible_code_artifact.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="tab-content"
+           id="myTabContent">
+        {% for ansible_code_artifact in (artifact.get_relation_source("ANSIBLE_CODE") | map(attribute='target')) %}
+        <div class="tab-pane fade {{ 'show active' if loop.index == 1 else '' }}"
+             id="file-{{ loop.index }}"
+             role="tabpanel"
+             aria-labelledby="file-{{ loop.index }}-tab">
+          {% include "ansible_code.partial.j2" %}
+        </div>
+        {% endfor %}
+      </div>
+
+    </p>
+  </div>
+</div>
+
+{% endblock %}

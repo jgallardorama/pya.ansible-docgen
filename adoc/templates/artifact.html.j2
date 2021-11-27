@@ -1,0 +1,107 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ artifact.name }}{% endblock %}
+{% block head %}
+{{ super() }}
+<style type="text/css">
+  .important {
+    color: #336699;
+  }
+
+  ,
+  .table-plain tbody tr,
+  .table-plain tbody tr:hover,
+  .table-plain tbody td {
+    background-color: transparent;
+    border: none;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+<h2>Detail</h2>
+<p>
+  <div class="doc-section">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Name</th>
+          <td>{{ artifact.name }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Namespace</th>
+          <td>{{ artifact.namespace }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Version</th>
+          <td>{{ artifact.version }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</p>
+<h2>References</h2>
+<p>
+  <div class="doc-section">
+    <ul>
+      {% for item in doc_repo.find_artifacts(artifact.namespace, artifact.name) %}
+      <li><a href="{{ item.get_file_path('index') }}.html">
+          {{ item.version }}
+        </a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</p>
+<h2>Included</h2>
+<p>
+  <div class="doc-section">
+    <object type="image/svg+xml"
+            data="{{ artifact.get_file_path('included.svg') }}"></object>
+  </div>
+</p>
+<h2>Included by</h2>
+<p>
+  <div class="doc-section">
+    <object type="image/svg+xml"
+            data="{{ artifact.get_file_path('included_by.svg') }}"></object>
+  </div>
+</p>
+<p>
+  <div class="doc-section">
+    <ul class="nav nav-tabs"
+        id="myTab"
+        role="tablist">
+      {% for ansible_code_artifact in (artifact.get_relation_source("ANSIBLE_CODE") | map(attribute='target')) %}
+      <li class="nav-item">
+        <a class="nav-link  {{ 'active' if loop.index == 1 else '' }}"
+           id="file-{{ loop.index }}-tab"
+           data-toggle="tab"
+           href="#file-{{ loop.index }}"
+           role="tab"
+           aria-controls="home"
+           aria-selected="true">{{ ansible_code_artifact.name }}</a>
+      </li> 
+      {% endfor %}
+    </ul>
+
+    <div class="tab-content"
+         id="myTabContent">
+      {% for ansible_code_artifact in (artifact.get_relation_source("ANSIBLE_CODE") | map(attribute='target')) %}
+      <div class="tab-pane fade {{ 'show active' if loop.index == 1 else '' }}"
+           id="file-{{ loop.index }}"
+           role="tabpanel"
+           aria-labelledby="file-{{ loop.index }}-tab">
+        {% include "ansible_code.partial.j2" %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</p>
+
+{% endblock %}

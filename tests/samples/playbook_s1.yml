@@ -1,0 +1,78 @@
+---
+
+- name: DC/OS Requirements
+  hosts: dcos-cluster
+  become: true
+  tasks:
+      # DC/OS System Requirements as of https://docs.mesosphere.com/1.11/installing/production/system-requirements/
+    - name: "Gather OS specific variables"
+      include_vars: "{{ item }}"
+      with_first_found:
+        - "{{ playbook_dir }}/group_vars/all/{{ ansible_distribution }}{{ ansible_distribution_major_version }}.yml"
+        - "vars/generic.yml"
+    - name: Network Time Protocol
+      include_role:
+        name: lnx-role.ntp
+    - name: Network File System
+      include_role:
+        name: lnx-role.nfs
+    - name: Docker
+      include_role:
+        name: lnx-role.docker-server
+    - name: Operating System Configuration
+      include_role:
+        name: lnx-role.os-config
+    - name: Operating System Configuration
+      include_role:
+        name: lnx-role.os-config
+      vars:
+        dcos:
+          config:
+            bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]]['ansible_facts'][host_eth]['ipv4']['address'] }}:8080"
+            master_list: "{{ groups['masters'] 
+                            | map('extract', hostvars, ['ansible_facts', host_eth , 'ipv4', 'address']) 
+                            | list }}"
+
+- name: "Setup and configure BOOTSTRAP nodes"
+  hosts: bootstraps
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS-bootstrap
+      vars:
+        license_path: "{{ playbook_dir }}/group_vars/dcos-cluster/license-vault.txt"
+        dcos:
+          config:
+            bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]]['ansible_facts'][host_eth]['ipv4']['address'] }}:8080"
+            master_list: "{{ groups['masters'] 
+                            | map('extract', hostvars, ['ansible_facts', host_eth , 'ipv4', 'address']) 
+                            | list }}"
+
+- name: "Setup and configure MASTER nodes"
+  hosts: masters
+  serial: 1
+  become: true
+  tasks:
+    - include_role:
+        name: lnx-role.dcos-server
+      vars:
+        dcos:
+          config:
+            bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]]['ansible_facts'][host_eth]['ipv4']['address'] }}:8080"
+            master_list: "{{ groups['masters'] 
+                            | map('extract', hostvars, ['ansible_facts', host_eth , 'ipv4', 'address']) 
+                            | list }}"
+
+- name: "Setup and configure AGENT nodes"
+  hosts: agents
+  become: true
+  tasks:
+    - include_role:
+        name: lnx-role.dcos-server
+      vars:
+        dcos:
+          config:
+            bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]]['ansible_facts'][host_eth]['ipv4']['address'] }}:8080"
+            master_list: "{{ groups['masters'] 
+                            | map('extract', hostvars, ['ansible_facts', host_eth , 'ipv4', 'address']) 
+                            | list }}"

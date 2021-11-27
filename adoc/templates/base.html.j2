@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description"
+        content="">
+  <meta name="author"
+        content="">
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet"
+        href="static/bootstrap/4.3.1/bootstrap.min.css">
+  <link rel="stylesheet"
+        href="static/highlight/9.15.8/default.min.css">
+  <link rel="stylesheet"
+        href="static/style.css">
+  <script src="static/highlight/9.15.8/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  {% block head %}
+  <title>{% block title %}{% endblock %} - My Webpage</title>
+  {% endblock %}
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand"
+       href="index.html">CIA IAC</a>
+    <button class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarResponsive"
+            aria-controls="navbarResponsive"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse"
+         id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link"
+             href="index.html">Home
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             href="projects.html">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             href="artifacts.html">Artifacts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             href="#">Search</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <main class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </main>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="static/jquery/3.3.1/jquery-3.3.1.slim.min.js"></script>
+  <script src="static/popper/1.14.7/popper.min.js"></script>
+  <script src="static/bootstrap/4.3.1/bootstrap.min.js"></script>
+
+  <footer>
+  </footer>
+
+</body>
+
+</html>

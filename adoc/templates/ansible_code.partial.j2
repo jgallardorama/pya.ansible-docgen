@@ -1,0 +1,13 @@
+<h3>File: {{ ansible_code_artifact.name }}
+  <a href="{{ ansible_code_artifact.get_project_url() }}"
+     target="_blank">[*]</a>
+</h3>
+<div>
+  <table class="table table-bordered">
+    <tbody>
+      {% for ansible_code_object in ansible_code_artifact.ansibleCodeObjects %}
+      {% include "ansible_code_item.partial.j2" %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
