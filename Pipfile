@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+coloredlogs = "==15.0.1"
+pyyaml = "*"
+python-gitlab = "*"
+gitpython = "==3.1.24"
+graphviz = "==0.18.2"
+jinja2 = "==3.0.3"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
